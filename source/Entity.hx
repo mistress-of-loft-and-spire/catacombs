@@ -2,7 +2,12 @@ package;
 
 import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.graphics.FlxGraphic;
+import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
+import flixel.math.FlxAngle;
+import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
+import openfl.display.BlendMode;
 import openfl.geom.Vector3D;
 
 class Entity extends FlxBasic
@@ -18,27 +23,26 @@ class Entity extends FlxBasic
 	{
 		place(x, y, z);
 
+
 		//front
-		mesh.add(new Tri([-1, -1, -1], [-1,  1, -1], [ 1, -1, -1], FlxG.random.color(0x555555,0xffffff,255)));
-		mesh.add(new Tri([-1,  1, -1], [ 1, -1, -1], [ 1,  1, -1], FlxG.random.color(0x555555,0xffffff,255)));
+		mesh.add(new Tri([-1,  1, 0], [ 1,  1, 0], [-1, -1, 0], [ 1, -1, 0], [0,0, 0.5,0, 0,0.5, 0.5,0.5], FlxG.random.color(0x555555,0xffffff,255)));
+		mesh.add(new Tri([1,  1, 0], [ 3,  1, 0], [1, -1, 0], [ 3, -1, 0], [0,0,0.5,0,0,0.5,0.5,0.5], FlxG.random.color(0x555555,0xffffff,255)));
+		mesh.add(new Tri([-1, 3, 0], [ 1,  3, 0], [-1, 1, 0], [ 1, 1, 0], [0,0,0.5,0,0,0.5,0.5,0.5], FlxG.random.color(0x555555,0xffffff,255)));
+		mesh.add(new Tri([1,  3, 0], [ 3,  3, 0], [1, 1, 0], [ 3, 1, 0], [0,0,0.5,0,0,0.5,0.5,0.5], FlxG.random.color(0x555555,0xffffff,255)));
+		
 		//back
-		mesh.add(new Tri([-1,  1,  1], [-1, -1,  1], [ 1, -1,  1], FlxG.random.color(0x555555,0xffffff,255)));
-		mesh.add(new Tri([-1,  1,  1], [ 1, -1,  1], [ 1,  1,  1], FlxG.random.color(0x555555,0xffffff,255)));
+		//mesh.add(new Tri([-1,  1,  1], [-1, -1,  1], [ 1, -1,  1], FlxG.random.color(0x555555,0xffffff,255)));
 		
 		//top
-		mesh.add(new Tri([-1, -1, -1], [-1, -1,  1], [ 1, -1, -1], FlxG.random.color(0x555555,0xffffff,255)));
-		mesh.add(new Tri([ 1, -1, -1], [-1, -1,  1], [ 1, -1,  1], FlxG.random.color(0x555555,0xffffff,255)));
+		//mesh.add(new Tri([-1, -1, -1], [-1, -1,  1], [ 1, -1, -1], FlxG.random.color(0x555555,0xffffff,255)));
 		//bottom
-		mesh.add(new Tri([-1,  1, -1], [-1,  1,  1], [ 1,  1, -1], FlxG.random.color(0x555555,0xffffff,255)));
-		mesh.add(new Tri([ 1,  1, -1], [-1,  1,  1], [ 1,  1,  1], FlxG.random.color(0x555555,0xffffff,255)));
+		//mesh.add(new Tri([-1,  1, -1], [-1,  1,  1], [ 1,  1, -1], FlxG.random.color(0x555555,0xffffff,255)));
 		
 		//left
-		mesh.add(new Tri([-1,  1, -1], [-1, -1, -1], [-1, -1,  1], FlxG.random.color(0x555555,0xffffff,255)));
-		mesh.add(new Tri([-1,  1,  1], [-1,  1,  1], [-1,  1, -1], FlxG.random.color(0x555555,0xffffff,255)));
+		//mesh.add(new Tri([-1,  1, -1], [-1, -1, -1], [-1, -1,  1], FlxG.random.color(0x555555,0xffffff,255)));
 		//right
-		mesh.add(new Tri([ 1,  1, -1], [ 1, -1, -1], [ 1, -1,  1], FlxG.random.color(0x555555,0xffffff,255)));
-		mesh.add(new Tri([ 1,  1,  1], [ 1,  1,  1], [ 1,  1, -1], FlxG.random.color(0x555555,0xffffff,255)));
-
+		//mesh.add(new Tri([ 1,  1, -1], [ 1, -1, -1], [ 1, -1,  1], FlxG.random.color(0x555555,0xffffff,255)));
+		
 		mesh.scale(10);
 
 		super();
@@ -46,9 +50,9 @@ class Entity extends FlxBasic
 	
 	override public function update(elapsed:Float):Void
 	{
-		mesh.rotate(0, 0.001, 0.002);
+		//mesh.rotate(0, 0.001, 0);
 		
-		trace(mesh.rotation);
+		//trace(mesh.rotation);
 		
 		super.update(elapsed);
 	}
@@ -60,10 +64,12 @@ class Entity extends FlxBasic
 		if (z != null) this.z += z;
 	}
 
-	/*public function moveVector(quat?, amount)
+	public function moveAngle(axis:String, angle:Float, amount:Float)
 	{
-		}
-	*/
+		var moveVector:FlxPoint = FlxAngle.getCartesianCoords(amount, angle);
+		move(moveVector.y, 0, -moveVector.x);
+	}
+	
 	
 	public function place(?x:Float, ?y:Float, ?z:Float)
 	{
@@ -92,6 +98,7 @@ class Mesh
 			i.vertexA.scaleBy(factor);
 			i.vertexB.scaleBy(factor);
 			i.vertexC.scaleBy(factor);
+			i.vertexD.scaleBy(factor);
 		}
 	}
 			
@@ -101,7 +108,7 @@ class Mesh
 		
 		for (i in data)
 		{
-			var vectorList:Array<Vector3D> = [i.vertexA, i.vertexB, i.vertexC, i.normal];
+			var vectorList:Array<Vector3D> = [i.vertexA, i.vertexB, i.vertexC, i.vertexD, i.normal];
 			
 			for (j in vectorList)
 			{
@@ -136,19 +143,25 @@ class Tri
 	public var vertexA:Vector3D;
 	public var vertexB:Vector3D;
 	public var vertexC:Vector3D;
+	public var vertexD:Vector3D;
+	
+	public var uvOffset:Array<Float>;
 
 	public var color:Int = 0x50587f;
 
 	public var normal:Vector3D;
 
-	public function new(a:Array<Float>, b:Array<Float>, c:Array<Float>, ?color:Int)
+	public function new(a:Array<Float>, b:Array<Float>, c:Array<Float>, d:Array<Float>, ?uvoff:Array<Float>, ?color:Int)
 	{
-		if (a.length != 3 && b.length != 3 && c.length != 3)
+		if (a.length != 3 && b.length != 3 && c.length != 3 && d.length != 3)
 			throw("Error: Vertex coordinates need to have exactly [x, y, z]");
 
 		vertexA = new Vector3D(a[0], a[1], a[2]);
 		vertexB = new Vector3D(b[0], b[1], b[2]);
 		vertexC = new Vector3D(c[0], c[1], c[2]);
+		vertexD = new Vector3D(d[0], d[1], d[2]);
+		
+		uvOffset = uvoff;
 		
 		normal = new Vector3D(0, 0, 0); //TODO
 
