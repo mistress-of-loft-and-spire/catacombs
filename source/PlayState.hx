@@ -197,7 +197,7 @@ class PlayState extends FlxState
 				//j.x = ((EZ/j.z) * j.x) + (FlxG.width / 2);
 				//j.y = ((EZ/j.z) * j.y) + (FlxG.height / 2);
 				
-				j.x = (j.;
+				j.x = (j.x * ;
 				j.y = ((EZ / j.z) * j.x) + (FlxG.width / 2);
 			}
 			
